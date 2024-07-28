@@ -15,10 +15,13 @@ export function MainChat() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ input }),
+            body: JSON.stringify({prompt: input }),
           });
-          const data = await res.json();
-          setResponse(data);
+          const text = await res.text(); // Get raw text
+      console.log('Raw response:', text); // Log raw response
+
+      const data = JSON.parse(text); // Parse response text to JSON
+      setResponse(data);
         } catch (error) {
           console.error('Error:', error);
         }
