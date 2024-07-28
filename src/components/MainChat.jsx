@@ -2,11 +2,27 @@ import React, { useState } from 'react'
 import sendbtn from '../assets/send.svg'
 import userIcon from '../assets/user-icon.png'
 import chatLogo from '../assets/chatgptLogo.svg'
-import { sendMessage } from '../openAI'
+
 
 export function MainChat() {
+    const [input , setInput] = useState("")
+    const [response , setResponse] = useState("")
     
-    
+    const handleSubmit = async () => {
+        try {
+          const res = await fetch('https://gpt-clone-alpha.vercel.app/api/generate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ input }),
+          });
+          const data = await res.json();
+          setResponse(data);
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
 
     return (
        <div className='bg-blue-950 text-gray-200 min-h-screen h-full w-4/5 flex flex-col items-center justify-between'>
@@ -18,8 +34,8 @@ export function MainChat() {
         </div>
         <div className='w-full flex flex-col items-center justify-center mb-4 gap-3'>
         <div className='flex items-center justify-center mt-auto w-full max-w-2xl bg-gray-600 p-4 rounded-lg'>
-            <input type="text" className='bg-inherit w-full outline-none  text-white'  placeholder='Send a message' />
-            <button><img src={sendbtn} alt="" /></button>
+            <input type="text" className='bg-inherit w-full outline-none  text-white' value={input} onChange={(e)=>setInput(e.target.value)} placeholder='Send a message' />
+            <button><img src={sendbtn} onClick={handleSubmit} alt="" /></button>
             
         </div>
         <p className='text-sm'>ChatGPT can make mistakes. Check important info.</p>
